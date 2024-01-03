@@ -65,9 +65,10 @@ class KudosGiver:
             self.page.keyboard.press('PageUp')
 
         try:
-            self.own_profile_id = self.page.locator("#athlete-profile .card-body > a").get_attribute('href').split("/athletes/")[1]
+            self.own_profile_id = self.page.locator(".user-menu > a").get_attribute('href').split("/athletes/")[1]
+            print("id", self.own_profile_id)
         except:
-            self.own_profile_id = '17796761'  ## your own athlete id.
+            print("can't find own profile ID")
 
     def locate_kudos_buttons_and_maybe_give_kudos(self, web_feed_entry_locator) -> int:
         """
@@ -87,6 +88,11 @@ class KudosGiver:
             web_feed = web_feed_entry_locator.nth(i)
             p_count = web_feed.get_by_test_id("entry-header").count()
 
+            # check if feed item is a club post
+            if self.is_club_post(web_feed):
+                print('c', end='')
+                continue
+
             # check if activity has multiple participants
             if p_count > 1:
                 for j in range(p_count):
@@ -101,8 +107,20 @@ class KudosGiver:
                 if not self.is_participant_me(web_feed):
                     button = self.find_unfilled_kudos_button(web_feed)
                     given_count += self.click_kudos_button(unfilled_kudos_container=button)
-        print(f"Kudos given: {given_count}")
+        print(f"\nKudos given: {given_count}")
         return given_count
+    
+    def is_club_post(self, container) -> bool:
+        """
+        Returns true if the container is a club post
+        """
+        if(container.get_by_test_id("group-header").count() > 0):
+            return True
+        
+        if(container.locator(".clubMemberPostHeaderLinks").count() > 0):
+            return True
+
+        return False
     
     def is_participant_me(self, container) -> bool:
         """
