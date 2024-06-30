@@ -1,4 +1,4 @@
-# Strava Kudos Giver 👍👍👍
+# Strava Kudos Giver
 
 [![Python 3.9](https://img.shields.io/badge/python-3.9-blue.svg)](https://www.python.org/downloads/release/python-370/) ![Github Actions](https://github.com/isaac-chung/strava-kudos/actions/workflows/give_kudos.yml/badge.svg)
 
